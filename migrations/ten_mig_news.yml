@@ -1,0 +1,97 @@
+id: ten_mig_news
+label: news
+migration_group: ten
+migration_tags:
+  - content
+  - news
+
+# The source plugin is the first to run.
+# It defines the source of the data to be migrated
+# and the fields to be used in the migration.
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  # include_raw_data: true
+  urls:
+    - 'public://ten_mig/data/news.json'
+  item_selector: news
+  ids:
+    nid:
+      type: integer
+  fields:
+    -
+      name: nid
+      label: 'Node ID'
+      selector: nid
+    -
+      name: title
+      label: 'title'
+      selector: title
+    -
+      name: summary
+      label: 'summary'
+      selector: summary
+    -
+      name: body
+      label: 'body'
+      selector: body
+    -
+      name: image
+      label: 'image'
+      selector: image/src
+    -
+      name: created
+      label: 'created'
+      selector: created
+    -
+      name: changed
+      label: 'changed'
+      selector: changed
+    -
+      name: status
+      label: 'status'
+      selector: status
+
+# The process section is where the actual work is done.
+# Each source field is mapped to a destination field.
+process:
+  type: news
+  title:
+    plugin: callback
+    callable: trim
+    source: title
+  'body/summary': summary
+  'body/value': body
+  'body/format':
+    plugin: default_value
+    default_value: basic_html
+  field_image:
+    plugin: migration_lookup
+    migration: ten_mig_news_media
+    source: nid
+  uid:
+    # if a user migration is used,
+    # the following can be used to set the user id
+    # -
+    #   plugin: migration_lookup
+    #   migration: ten_mig_user
+    #   source: uid
+    -
+      plugin: default_value
+      default_value: 1
+  created: created
+  changed: changed
+  status: status
+
+# Destination plugin and default bundle, aka content type.
+destination:
+  plugin: entity:node
+  default_bundle: news
+
+# The general rule of thumb is that any migrations referenced by migration
+# process plugins should be required here.
+migration_dependencies:
+  required:
+    - ten_mig_news_media
+    # - ten_mig_user

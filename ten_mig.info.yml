@@ -1,0 +1,10 @@
+name: 'ten mig'
+type: module
+description: 'a simple json-based migration module'
+package: Custom
+core_version_requirement: ^10
+dependencies:
+  - drupal:media
+  - drupal:media_library
+  - migrate_plus:migrate_plus
+  - migrate_tools:migrate_tools

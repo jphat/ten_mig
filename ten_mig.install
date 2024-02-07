@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types = 1);
+
+/**
+ * @file
+ * Install, update, and uninstall functions for ten_mig.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Copies the sample files to public:// folder.
+ */
+function ten_mig_install(): void {
+  // Create the example file directory and ensure it's writable.
+  $directory = \Drupal::config('system.file')->get('default_scheme') . '://ten_mig';
+  \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $data_directory = \Drupal::config('system.file')->get('default_scheme') . '://ten_mig/data';
+  \Drupal::service('file_system')->prepareDirectory($data_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $images_directory = \Drupal::config('system.file')->get('default_scheme') . '://ten_mig/images';
+  \Drupal::service('file_system')->prepareDirectory($images_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  // Get the path to the module
+  $module_path = \Drupal::moduleHandler()->getModule('ten_mig')->getPath();
+
+  // Scan artifacts/data for all files and copy them to the data directory in public://ten_mig/data
+  $data_files_source = $module_path . '/artifacts/data';
+  $data_files = \Drupal::service('file_system')->scanDirectory($data_files_source, '/.*/', []);
+  foreach ($data_files as $data_file) {
+    try {
+      \Drupal::service('file_system')->copy($data_file->uri, $data_directory . '/' . $data_file->filename, FileSystemInterface::EXISTS_REPLACE);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('ten_mig')->error('Error copying file: ' . $e->getMessage());
+    }
+  }
+
+  // scan artifacts/images for all files and copy them to the images directory in public://ten_mig/images
+  $image_files_source = $module_path . '/artifacts/images';
+  $image_files = \Drupal::service('file_system')->scanDirectory($image_files_source, '/.*/', []);
+  foreach ($image_files as $image_file) {
+    try {
+      \Drupal::service('file_system')->copy($image_file->uri, $images_directory . '/' . $image_file->filename, FileSystemInterface::EXISTS_REPLACE);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('ten_mig')->error('Error copying file: ' . $e->getMessage());
+    }
+  }
+}
+
+/**
+ * Removes the sample files and folders public:// folder.
+ */
+function ten_mig_uninstall(): void {
+  $directory = \Drupal::config('system.file')->get('default_scheme') . '://ten_mig';
+  \Drupal::service('file_system')->deleteRecursive($directory);
+}

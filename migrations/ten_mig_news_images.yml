@@ -1,0 +1,84 @@
+id: ten_mig_news_images
+label: news images
+migration_group: ten
+migration_tags:
+  - files
+  - news
+
+# The source plugin is the first to run.
+# It defines the source of the data to be migrated
+# and the fields to be used in the migration.
+source:
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  urls:
+    - 'public://ten_mig/data/news.json'
+  item_selector: news
+  ids:
+    nid:
+      type: integer
+  fields:
+    -
+      name: nid
+      label: 'Node ID'
+      selector: nid
+    -
+      name: image
+      label: 'image'
+      selector: image/src
+    -
+      name: alt
+      label: 'alt text'
+      selector: image/alt
+    -
+      name: credit
+      label: 'credit'
+      selector: image/credit
+    -
+      name: created
+      label: 'created'
+      selector: created
+  constants:
+    SOURCE: 'public://ten_mig/images/'
+    DESTINATION: 'public://'
+
+# The process section is where the actual work is done.
+# Each source field is mapped to a destination field.
+process:
+  # prepare source with file path
+  pseudo_source:
+    -
+      plugin: concat
+      source:
+        - 'constants/SOURCE'
+        - image
+  # to keep Drupal Media naming convention,
+  # folder is created with year and month
+  pseudo_date:
+    -
+      plugin: format_date
+      from_format: 'U'
+      to_format: 'Y-m'
+      source: created
+  # destination is created with full path
+  pseudo_destination:
+    -
+      plugin: concat
+      source:
+        - 'constants/DESTINATION'
+        - '@pseudo_date'
+        - image
+      delimiter: /
+  uri:
+    -
+      plugin: file_copy
+      source:
+        - '@pseudo_source'      # source file
+        - '@pseudo_destination' # destination file
+      file_exists: skip
+      move: false
+
+# Destination plugin and default bundle, aka content type.
+destination:
+  plugin: entity:file
