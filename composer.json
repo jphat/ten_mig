@@ -1,0 +1,13 @@
+{
+    "name": "drupal/ten_mig",
+    "description": "A simple json-based migration module.",
+    "type": "drupal-module",
+    "require": {
+      "ezyang/htmlpurifier": "^4.14"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+      "sort-packages": true
+    }
+  }
