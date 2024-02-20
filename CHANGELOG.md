@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 - /
 
+## [0.0.3] - 2024-02-20
+
+### Fixed
+
+- `news.json` images with correct file extensions
+- clean up in `ten_mig_news.yml` and `CopyCleanup.php` migration
+
 ## [0.0.2] - 2024-02-15
 
 ### Added
@@ -30,6 +37,7 @@ and this project adheres to [Semantic Versioning].
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
 <!-- Versions -->
-[unreleased]: https://github.com/jphat/ten_mig/compare/v0.0.2...HEAD
+[unreleased]: https://github.com/jphat/ten_mig/compare/v0.0.3...HEAD
+[0.0.3]: https://github.com/jphat/ten_mig/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/jphat/ten_mig/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/jphat/ten_mig/releases/tag/v0.0.1

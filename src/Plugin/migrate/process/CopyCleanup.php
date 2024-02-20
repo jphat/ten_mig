@@ -60,6 +60,7 @@ final class CopyCleanup extends ProcessPluginBase
       'urls' => '/https:\/\/urldefense\.com\S*/i',
       'hasTable' => '/<table\S*/i',
     ];
+
     $types = [];
 
     /* @var $purifier_config \HTMLPurifier_Config */

@@ -71,23 +71,10 @@ process:
   'body/format':
     plugin: default_value
     default_value: full_html
-  field_image:
+  field_media_image:
     plugin: migration_lookup
     migration: ten_mig_news_media
     source: nid
-  field_tags:
-    -
-      plugin: ten_mig_taxonomy_cleanup
-      source: tags
-    # -
-    #   plugin: callback
-    #   callable: var_dump # dump the value to terminal for debug
-    -
-      plugin: entity_generate
-      entity_type: taxonomy_term
-      bundle: tags
-      bundle_key: vid
-      value_key: name
   uid:
     # if a user migration is used,
     # the following can be used to set the user id
